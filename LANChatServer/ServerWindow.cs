@@ -9,6 +9,7 @@ using System.Timers;
 using System.Threading.Tasks;
 using SimpleTCP;
 using System.Windows.Forms;
+using System.Net.Sockets;
 
 namespace LANChatServer
 {
@@ -22,7 +23,9 @@ namespace LANChatServer
         SimpleTcpServer server;
         ChatMessage msg;
         Voting vote;
-
+        List<TcpClient> clientlist = new List<TcpClient>();
+        List<TcpClient> disconnected = new List<TcpClient>();
+ 
         private void ServerWindow_Load(object sender, EventArgs e)
         {
             server = new SimpleTcpServer();
@@ -30,19 +33,71 @@ namespace LANChatServer
             server.StringEncoder = Encoding.UTF8;
             server.DataReceived += Server_DataReceived;
             server.ClientConnected += Server_NewClientConnected;
+            server.ClientDisconnected += Server_ClientDisconnected;
         }
 
-        private void Server_NewClientConnected(object sender, System.Net.Sockets.TcpClient e)
+        private void Server_NewClientConnected(object sender, TcpClient e)
         {
             ChatMessage info = new ChatMessage("info", "", "server", String.Format("New Client: connected") + Environment.NewLine);
             txtServerStatus.Invoke((MethodInvoker)delegate ()
             {
                 txtServerStatus.Text += info.PrintChatMessage();
+                clientlist.Add(e);
                 // Now we have to send this message to all Clients...
-                server.BroadcastLine(info.EncodeMessage());
+                //server.BroadcastLine(info.EncodeMessage());
+                SendBC(info.EncodeMessage());
             });
         }
 
+        public void SendBC(String txt)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(txt);
+
+            // detect disconnected clients
+            foreach (var c in clientlist)
+            {
+                try
+                {
+                    if (c.Client.Connected)
+                    {
+                        c.Client.Send(bytes);
+                    }
+                } catch (Exception ex)
+                {
+                    disconnected.Add(c);
+                }
+            }
+
+           // remove from clientlist
+           foreach (var d in disconnected)
+            {
+                clientlist.Remove(d);
+            }
+
+           // clear tmp disconnected list
+            disconnected.Clear();
+            // try to BC to all remaining clients
+            try
+            {
+                foreach (var c in clientlist)
+                {
+                    if (c.Client.Connected)
+                    {
+                        c.Client.Send(bytes);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                txtServerStatus.Text += "BC went wrong";
+            }
+        }
+    
+
+        private void Server_ClientDisconnected(object sender, TcpClient e)
+        {
+            clientlist.Remove(e);
+        }
 
         private void Server_DataReceived(object sender, SimpleTCP.Message e)
         {
@@ -52,17 +107,19 @@ namespace LANChatServer
             {
                 // Now we have to send this message to all Clients...
                 serverTxt_buf += msg.PrintChatMessage() + Environment.NewLine;
-                server.BroadcastLine(e.MessageString);
+                SendBC(e.MessageString);
             }
 
             if (msg.Type == "chat-hello")
             {
-                server.BroadcastLine(msg.EncodeMessage());
+                serverTxt_buf += msg.PrintChatMessage() + Environment.NewLine;
+                SendBC(e.MessageString);
             }
 
             if (msg.Type == "chat-bye")
             {
-                server.BroadcastLine(msg.EncodeMessage());
+                serverTxt_buf += msg.PrintChatMessage() + Environment.NewLine;
+                SendBC(e.MessageString);
             }
 
             if (msg.Type == "vote")
@@ -97,7 +154,7 @@ namespace LANChatServer
                             serverTxt_buf += item + Environment.NewLine;
                         }
                         // send Voting to all Clients
-                        server.BroadcastLine(e.MessageString.Replace(":", "\n").Replace("?", "?\n"));
+                        SendBC(e.MessageString.Replace(":", "\n").Replace("?", "?\n"));
                     }
                 }
                 else
@@ -138,7 +195,7 @@ namespace LANChatServer
         {
             String result = vote.GetVotingResult();
             ChatMessage resultMsg = new ChatMessage("vote", "", "server", "Voting Finished: Winner!: "+ result);
-            server.BroadcastLine(resultMsg.EncodeMessage());
+            SendBC(resultMsg.EncodeMessage());
             // todo we have no Access to ServerStatus.Text becaus it is in a different thread..
             txtServerStatus.Invoke((MethodInvoker)delegate ()
             {

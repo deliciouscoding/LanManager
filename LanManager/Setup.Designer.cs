@@ -50,7 +50,7 @@
             this.txtServerUrl.Name = "txtServerUrl";
             this.txtServerUrl.Size = new System.Drawing.Size(173, 20);
             this.txtServerUrl.TabIndex = 0;
-            this.txtServerUrl.Text = "192.168.178.5:44044";
+            this.txtServerUrl.Text = "127.0.0.1:44044";
             // 
             // labelServerUrl
             // 

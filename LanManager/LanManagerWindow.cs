@@ -19,7 +19,8 @@ namespace LanManager
     {
         public Setup mySetup = new Setup("Unknown", "127.0.0.1:44044");
         Games GamesWindow = new Games();
-        SimpleTcpClient client;
+        SimpleTcpClient client = null;
+        List<String> clientlist = new List<String>();
         ChatMessage msg;
 
         public String server_ip = "127.0.0.1";
@@ -56,7 +57,10 @@ namespace LanManager
             try
             {
                 // Reconnect the TCP connection
-                client.Disconnect();
+                if (client != null)
+                {
+                    client.Disconnect();
+                }
                 client = new SimpleTcpClient();
                 client.Connect(server_ip, server_port);
                 client.StringEncoder = Encoding.UTF8;
@@ -75,8 +79,7 @@ namespace LanManager
 
         private void btnSendChatMessage_Click(object sender, EventArgs e)
         {
-            msg.Payload = txtMessage.Text;
-            SendMessage(msg);
+            SendChatMessage(txtMessage.Text);
         }
 
         private void Client_DataReceived(object sender, SimpleTCP.Message e)
@@ -95,20 +98,40 @@ namespace LanManager
                     }
                     else if (response.Type == "chat")
                     {
-                        // common message
-                        // message was received correctly from Server so we can show the message to
-                        // our own text field
+                        /* common message
+                         * message was received correctly from Server so we can show the message to
+                         * our own text field
+                         */                    
                         byte[] bytes = Encoding.Default.GetBytes(response.PrintChatMessage() + Environment.NewLine);
                         txtChat.Text += Encoding.UTF8.GetString(bytes);
 
                     }
-                    else if (response.Type == "chat-hello")
-                    {
-
+                    else if (response.Type == "chat-hello") // hello/bye messages only have the username of the "new" member in payload
+                    { // NEW Chat User
+                        if (!clientlist.Contains(response.Payload))
+                        {
+                            txtChat.Text += String.Format("{0} has connected!{1}", response.Payload, Environment.NewLine);
+                            clientlist.Add(response.Payload);
+                        }
+                        txtClientList.Clear();
+                        foreach (string client in clientlist)
+                        {
+                            txtClientList.Text += client + Environment.NewLine;
+                        }
                     }
                     else if (response.Type == "chat-bye")
                     {
-
+                        // Chat User disconnected
+                        if (!clientlist.Contains(response.Payload))
+                        {
+                            txtChat.Text += String.Format("{0} has disconnected!{0}", response.Payload, Environment.NewLine);
+                            clientlist.Remove(response.Payload);
+                        }
+                        txtClientList.Clear();
+                        foreach (string client in clientlist)
+                        {
+                            txtClientList.Text += client;
+                        }
                     }
 
                 });
@@ -117,7 +140,7 @@ namespace LanManager
 
         private void LanManagerWindow_Load(object sender, EventArgs e)
         {
-            client = new SimpleTcpClient();
+            //client = new SimpleTcpClient();
             msg = new ChatMessage();
         }
 
@@ -147,8 +170,7 @@ namespace LanManager
         {
             if(e.KeyChar == 13)
             {
-                msg.Payload = txtMessage.Text;
-                SendMessage(this.msg);
+                SendChatMessage(txtMessage.Text);
             }
         }
 
@@ -156,20 +178,35 @@ namespace LanManager
         public void SendMessage(ChatMessage m)
         {
             try
-            {   if (m.Payload == "") return;
+            {
+                client.WriteLine(m.EncodeMessage());
+            }
+            catch (Exception ex)
+            {
+                txtChat.Text = "Could not Send Message! Check your Settings!";
+            }
+        }
+
+        public void SendChatMessage(String txt)
+        {
+            ChatMessage m = new ChatMessage();
+            try
+            {
+                if (txt == "") return;
                 m.Source = mySetup.Nickname;
                 m.Type = "chat";
 
-                if (m.Payload.StartsWith("!games?"))
+                if (txt.StartsWith("!games?"))
                 {
                     // here we have a voting request -> Check for args
                     msg.Type = "vote";
                 }
 
-                if (m.Payload.StartsWith("!"))
+                if (txt.StartsWith("!"))
                 {
                     m.Type = "vote";
                 }
+                m.Payload = txt;
                 client.WriteLine(m.EncodeMessage());
                 txtMessage.Clear(); // reset txtMessage field
                 txtMessage.Focus();
@@ -180,7 +217,7 @@ namespace LanManager
             }
         }
 
-      
+
     }
 }
 

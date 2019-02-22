@@ -74,7 +74,7 @@
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.Size = new System.Drawing.Size(495, 23);
             this.txtMessage.TabIndex = 3;
-            this.txtMessage.Text = "(write a Message)";
+            this.txtMessage.Text = "a";
             this.txtMessage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtMessage_MouseClick);
             this.txtMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMessage_KeyPress);
             // 
