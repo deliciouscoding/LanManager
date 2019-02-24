@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\LANChatServer\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatMessage.cs" />
+    <Compile Include="..\share\ChatMessage.cs">
+      <Link>ChatMessage.cs</Link>
+    </Compile>
     <Compile Include="Voting.cs" />
     <Compile Include="ServerWindow.cs">
       <SubType>Form</SubType>
