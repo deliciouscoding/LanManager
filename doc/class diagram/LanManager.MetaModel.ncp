@@ -3,7 +3,206 @@
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>MetaModel</Name>
     <Language>CSharp</Language>
-    <Entities />
-    <Relationships />
+    <Entities>
+      <Entity type="Class">
+        <Name>Application</Name>
+        <Access>Public</Access>
+        <Location left="401" top="451" />
+        <Size width="334" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public List&lt;ApplicationCharacteristic&gt; Characteristics { get; set; }</Member>
+        <Member type="Property">public ImageCollection ImageCollection { get; set; }</Member>
+        <Member type="Property">public List&lt;ApplicationGenre&gt; Genre { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ApplicaitonGenre</Name>
+        <Access>Public</Access>
+        <Location left="1261" top="451" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ApplicationCharacteristic</Name>
+        <Access>Public</Access>
+        <Location left="907" top="307" />
+        <Size width="201" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ManagedObject</Name>
+        <Access>Public</Access>
+        <Location left="189" top="81" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public int ID</Member>
+        <Member type="Field">public string DisplayName</Member>
+        <Member type="Field">public string ShortName</Member>
+        <Member type="Field">public string Abbreviation</Member>
+        <Member type="Field">public string ShortDescription</Member>
+        <Member type="Field">public string Description</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IPresentable</Name>
+        <Access>Public</Access>
+        <Location left="889" top="765" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">int IconID { get; set; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Image</Name>
+        <Access>Public</Access>
+        <Location left="573" top="860" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public int Height { get; set; }</Member>
+        <Member type="Property">public int Width { get; set; }</Member>
+        <Member type="Property">public string Path { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ImageCollection</Name>
+        <Access>Public</Access>
+        <Location left="138" top="462" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public List&lt;Image&gt; Images { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InstallProcedure</Name>
+        <Access>Public</Access>
+        <Location left="1198" top="818" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1341</X>
+          <Y>426</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>378</X>
+          <Y>139</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>509</X>
+          <Y>353</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1023</X>
+          <Y>85</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>382</X>
+          <Y>159</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="2" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>632</X>
+          <Y>242</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>383</X>
+          <Y>174</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="5" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="0" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>941</X>
+          <Y>739</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="6" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>330</X>
+          <Y>575</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>376</X>
+          <Y>575</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="6" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>765</X>
+          <Y>599</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="1" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1026</X>
+          <Y>737</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
   </ProjectItem>
 </Project>
